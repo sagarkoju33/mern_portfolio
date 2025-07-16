@@ -36,10 +36,18 @@ const aboutSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  skills: {
-    type: Array,
-    required: true,
-  },
+  skills: [
+    {
+      name: {
+        type: String,
+        required: true,
+      },
+      level: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 
 const experienceSchema = new mongoose.Schema({

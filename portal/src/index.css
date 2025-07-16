@@ -1,0 +1,17 @@
+/* Apply padding to Ant Design tabs globally */
+:root {
+  --tw-padding: 3rem; /* Tailwind's p-4 */
+}
+
+/* Use Tailwind’s layer utilities to extend base */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom padding for Ant Design Tabs */
+.ant-tabs {
+  padding: var(--tw-padding);
+}
+.ant-tabs .ant-tabs-nav {
+  margin-bottom: var(--tw-padding);
+}

@@ -16,7 +16,20 @@ const about = [
       "I am a Flutter developer with a passion for creating beautiful and functional mobile applications.",
     description2:
       "I have experience in building cross-platform apps using Flutter and Dart, and I am always eager to learn new technologies.",
-    skills: ["Flutter", "Dart", "Firebase", "REST APIs"],
+    skills: [
+      { name: "Flutter", level: "1.0" },
+      { name: "Dart", level: "0.9" },
+      { name: "Firebase", level: "0.75" },
+      { name: "REST APIs", level: "1" },
+      { name: "BLOC", level: "0.7" },
+      { name: "Provider", level: "0.8" },
+      { name: "Riverpod", level: "0.6" },
+      { name: "Getx", level: "0.95" },
+      { name: "Clean Architecture", level: "1" },
+      { name: "Responsive Design", level: "1" },
+      { name: "Kotlin", level: "0.6" },
+      { name: "React Native", level: "0.5" },
+    ],
   },
 ];
 
