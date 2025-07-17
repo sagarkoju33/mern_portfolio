@@ -28,6 +28,26 @@ const aboutSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
   description1: {
     type: String,
     required: true,
