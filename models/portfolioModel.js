@@ -32,19 +32,19 @@ const aboutSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  name: {
+  contactNumber: {
     type: String,
     required: true,
   },
-  name: {
+  emailAddress: {
     type: String,
     required: true,
   },
-  name: {
+  linkedln: {
     type: String,
     required: true,
   },
-  name: {
+  githubAccount: {
     type: String,
     required: true,
   },
@@ -63,6 +63,10 @@ const aboutSchema = new mongoose.Schema({
         required: true,
       },
       level: {
+        type: String,
+        required: true,
+      },
+      image: {
         type: String,
         required: true,
       },

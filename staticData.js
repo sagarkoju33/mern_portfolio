@@ -11,24 +11,86 @@ const intros = [
 
 const about = [
   {
-    lottieURL: "",
+    lottieURL: "https://i.postimg.cc/3rS2GCZZ/profile.jpg",
+    name: "Sagar Koju",
+    contactNumber: "9863180182",
+    emailAddress: "sagarkoju5@gmail.com",
+    linkedln: "https://www.linkedin.com/in/sagar-koju-444442166/",
+    githubAccount: "https://github.com/sagarkoju33",
     description1:
       "I am a Flutter developer with a passion for creating beautiful and functional mobile applications.",
     description2:
       "I have experience in building cross-platform apps using Flutter and Dart, and I am always eager to learn new technologies.",
     skills: [
-      { name: "Flutter", level: "1.0" },
-      { name: "Dart", level: "0.9" },
-      { name: "Firebase", level: "0.75" },
-      { name: "REST APIs", level: "1" },
-      { name: "BLOC", level: "0.7" },
-      { name: "Provider", level: "0.8" },
-      { name: "Riverpod", level: "0.6" },
-      { name: "Getx", level: "0.95" },
-      { name: "Clean Architecture", level: "1" },
-      { name: "Responsive Design", level: "1" },
-      { name: "Kotlin", level: "0.6" },
-      { name: "React Native", level: "0.5" },
+      {
+        name: "Flutter",
+        level: "1.0",
+        image:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg",
+      },
+      {
+        name: "Dart",
+        level: "0.9",
+        image:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dart/dart-original.svg",
+      },
+      {
+        name: "Firebase",
+        level: "0.75",
+        image:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg",
+      },
+      {
+        name: "REST APIs",
+        level: "1",
+        image: "https://cdn-icons-png.flaticon.com/512/1048/1048953.png",
+      },
+      {
+        name: "BLOC",
+        level: "0.7",
+        image:
+          "https://raw.githubusercontent.com/felangel/bloc/master/docs/assets/bloc_logo_full.png",
+      },
+      {
+        name: "Provider",
+        level: "0.8",
+        image:
+          "https://raw.githubusercontent.com/rrousselGit/provider/master/resources/logo.png",
+      },
+      {
+        name: "Riverpod",
+        level: "0.6",
+        image: "https://riverpod.dev/assets/logo.svg",
+      },
+      {
+        name: "Getx",
+        level: "0.95",
+        image:
+          "https://raw.githubusercontent.com/jonataslaw/getx-community/master/get.png",
+      },
+      {
+        name: "Clean Architecture",
+        level: "1",
+        image:
+          "https://miro.medium.com/v2/resize:fit:700/1*LtSI1FzE_tBMKFA-uFSz6g.png",
+      },
+      {
+        name: "Responsive Design",
+        level: "1",
+        image: "https://cdn-icons-png.flaticon.com/512/1006/1006771.png",
+      },
+      {
+        name: "Kotlin",
+        level: "0.6",
+        image:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg",
+      },
+      {
+        name: "React Native",
+        level: "0.5",
+        image:
+          "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+      },
     ],
   },
 ];

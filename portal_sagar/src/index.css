@@ -1,0 +1,20 @@
+input,
+textarea {
+  height: 40px;
+  border: 1px solid grey;
+  width: calc(100% - 32px); /* 16px left + 16px right */
+  padding-left: 16px;
+  margin-right: 16px;
+  /* margin-left: 20px; */
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+  border: 2px solid rgb(56, 56, 56);
+}
+
+textarea {
+  height: 100px;
+  padding-top: 10px;
+}
