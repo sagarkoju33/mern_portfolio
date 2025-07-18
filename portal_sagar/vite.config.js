@@ -8,7 +8,8 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://kojusagar.com.np",
+        target: "http://localhost:5000/",
+        // target: "https://kojusagar.com.np",
         changeOrigin: true,
         secure: false,
       },

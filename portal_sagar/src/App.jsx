@@ -8,6 +8,8 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { SetPortfolioData, ShowLoading, HideLoading } from "./redux/rootSlice";
 import { Loader } from "lucide-react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // make sure this is imported
 
 function App() {
   const dispatch = useDispatch();
@@ -28,13 +30,6 @@ function App() {
   useEffect(() => {
     getPortfolioData();
   }, []);
-  useEffect(() => {
-    console.log(portfolioData);
-  }, [portfolioData]);
-
-  if (loading) {
-    return <Loader />;
-  }
 
   const tabItems = [
     {
@@ -44,13 +39,24 @@ function App() {
     },
     {
       key: "2",
-      label: "About us",
+      label: "About Us",
       children: <AdminAbout />,
     },
   ];
 
   return (
     <>
+      {/* Global toast message handler */}
+      <ToastContainer position="top-right" autoClose={3000} />
+
+      {/* Loading spinner (global) */}
+      {loading && (
+        <div className="loader-wrapper">
+          <Loader className="animate-spin" size={40} />
+        </div>
+      )}
+
+      {/* Main content */}
       {portfolioData && (
         <div className="mt-5 p-10">
           <Tabs defaultActiveKey="1" items={tabItems} />
