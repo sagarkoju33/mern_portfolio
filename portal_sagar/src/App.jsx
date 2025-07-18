@@ -56,7 +56,6 @@ function App() {
         </div>
       )}
 
-      {/* Main content */}
       {portfolioData && (
         <div className="mt-5 p-10">
           <Tabs defaultActiveKey="1" items={tabItems} />
