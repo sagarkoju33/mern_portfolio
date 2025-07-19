@@ -2,6 +2,7 @@ const router = require("express").Router();
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
+require("dotenv").config();
 
 
 const {
@@ -111,11 +112,12 @@ router.post("/update-about-with-image", upload.single("image"), async (req, res)
       description2,
     };
 
-    if (req.file) {
-      const fullUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-      updatedData.lottieURL = fullUrl;
-    }
+const isProd = process.env.NODE_ENV === "production";
+const baseUrl = isProd ? process.env.BASE_URL : `${req.protocol}://${req.get("host")}`;
 
+if (req.file) {
+  updatedData.lottieURL = `${baseUrl}/uploads/${req.file.filename}`;
+}
     await About.findByIdAndUpdate(_id, updatedData);
     res.send({ success: true, message: "Image updated successfully" });
   } catch (error) {
