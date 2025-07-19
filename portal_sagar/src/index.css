@@ -5,7 +5,7 @@ textarea {
   width: calc(100% - 32px); /* 16px left + 16px right */
   padding-left: 16px;
   margin-right: 16px;
-  /* margin-left: 20px; */
+ /* margin-left: 20px; */
   box-sizing: border-box;
 }
 
@@ -25,4 +25,23 @@ textarea {
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+
+.custom-tabs .ant-tabs-tab {
+  color: #9ca3af; /* gray-400 */
+  transition: all 0.3s ease;
+}
+
+.custom-tabs .ant-tabs-tab-active {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.custom-tabs .ant-tabs-ink-bar {
+  background-color: #9333ea; /* purple-600 */
+}
+.ant-input:focus, .ant-input-focused, .ant-input:active {
+  box-shadow: none !important;
+  outline: none !important;
+  border-color: transparent !important;
 }

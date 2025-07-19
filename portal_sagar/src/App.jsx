@@ -44,25 +44,28 @@ function App() {
     },
   ];
 
-  return (
-    <>
-      {/* Global toast message handler */}
-      <ToastContainer position="top-right" autoClose={3000} />
+return (
+  <div className="min-h-screen bg-[#000515] text-white px-5 md:px-10">
+    {/* Global toast message handler */}
+    <ToastContainer position="top-right" autoClose={3000} />
 
-      {/* Loading spinner (global) */}
-      {loading && (
-        <div className="loader-wrapper">
-          <Loader className="animate-spin" size={40} />
-        </div>
-      )}
+    {/* Loading spinner (global) */}
+    {loading && (
+      <div className="loader-wrapper flex justify-center items-center min-h-screen">
+        <Loader className="animate-spin" size={40} />
+      </div>
+    )}
 
-      {portfolioData && (
-        <div className="mt-5 p-10">
-          <Tabs defaultActiveKey="1" items={tabItems} />
-        </div>
-      )}
-    </>
-  );
+    {/* Main content */}
+    {portfolioData && (
+      <div>
+        <Tabs defaultActiveKey="1" items={tabItems}  className="custom-tabs" />
+      </div>
+    )}
+  </div>
+);
+
+
 }
 
 export default App;

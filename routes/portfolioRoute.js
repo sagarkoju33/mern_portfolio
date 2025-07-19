@@ -1,4 +1,8 @@
 const router = require("express").Router();
+const express = require("express");
+const multer = require("multer");
+const path = require("path");
+
 
 const {
   Intro,
@@ -48,5 +52,77 @@ router.post("/update-intro", async (req, res) => {
     res.status(500).send(error);
   }
 });
+
+
+// update About
+
+router.post("/update-about", async (req, res) => {
+  try {
+    const about = await About.findOneAndUpdate(
+      { _id: req.body._id },
+      req.body,
+      { new: true }
+    );
+    res.status(200).send({
+      data: about,
+      success: true,
+      message: "Update update successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// Multer setup for image uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage });
+
+
+
+// Express.js (Multer Example)
+router.post("/update-about-with-image", upload.single("image"), async (req, res) => {
+  try {
+    const {
+      name,
+      contactNumber,
+      emailAddress,
+      linkedln,
+      githubAccount,
+      description1,
+      description2,
+      _id,
+    } = req.body;
+
+    const updatedData = {
+      name,
+      contactNumber,
+      emailAddress,
+      linkedln,
+      githubAccount,
+      description1,
+      description2,
+    };
+
+    if (req.file) {
+      const fullUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+      updatedData.lottieURL = fullUrl;
+    }
+
+    await About.findByIdAndUpdate(_id, updatedData);
+    res.send({ success: true, message: "Image updated successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ success: false, message: "Update failed" });
+  }
+});
+
 
 module.exports = router;
