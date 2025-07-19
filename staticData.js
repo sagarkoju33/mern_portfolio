@@ -266,3 +266,12 @@ const contact = [
     address: "Kamalbinyak-10, Nepal",
   },
 ];
+const uploadImage = {
+    "succes": true,
+    "msg": "File Uploaded Successfully!",
+    "data": {
+        "file_url": "https://res.cloudinary.com/dve98ojdc/image/upload/v1752944210/ez3yxagukql3k9mdno83.png",
+        "_id": "687bce5231536ed07632c444",
+        "__v": 0
+    }
+}

@@ -10,54 +10,26 @@ function AdminAbout() {
   const { portfolioData } = useSelector((state) => state.root);
   const fileInputRef = useRef();
   const [previewImage, setPreviewImage] = useState("");
-  const [selectedImageFile, setSelectedImageFile] = useState(null);
+  // const [selectedImageFile, setSelectedImageFile] = useState(null);
 
-const onFinish = async (val) => {
-  try {
-    dispatch(ShowLoading());
-
-    if (selectedImageFile) {
-      const formData = new FormData();
-      formData.append("image", selectedImageFile);
-
-      // append the rest of the form fields
-      Object.entries(val).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-
-      formData.append("_id", portfolioData.about._id);
-
-      const response = await axios.post("/api/portfolio/update-about-with-image", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      dispatch(HideLoading());
-
-      if (response.data.success) {
-        toast.success(response.data.message);
-      } else {
-        toast.error(response.data.message);
-      }
-    } else {
-      // fallback to simple JSON post if no image is selected
+  const onFinish = async (val) => {
+    try {
+      dispatch(ShowLoading());
       const response = await axios.post("/api/portfolio/update-about", {
         ...val,
         _id: portfolioData.about._id,
       });
-
       dispatch(HideLoading());
-
-      if (response.data.success) {
-        toast.success(response.data.message);
+   if (response.data.success) {
+        toast.success(response.data.message); 
       } else {
-        toast.error(response.data.message);
+        toast.error(response.data.message); 
       }
+    } catch (error) {
+      dispatch(HideLoading());
+      toast.error(error.message || "Something went wrong");
     }
-  } catch (error) {
-    dispatch(HideLoading());
-    toast.error(error.message || "Something went wrong");
-  }
-};
+  };
 
    useEffect(() => {
     if (portfolioData?.about?.lottieURL) {
@@ -65,17 +37,36 @@ const onFinish = async (val) => {
     }
    }, [portfolioData?.about?.lottieURL]);
   
-   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const handleImageChange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-    const localUrl = URL.createObjectURL(file);
-     setPreviewImage(localUrl);
-     setSelectedImageFile(file);
+  // Show local preview
+  const localUrl = URL.createObjectURL(file);
+  setPreviewImage(localUrl);
 
-    // Optional: You can upload it later manually
-    // (Or pass file to parent handler or store it for form submission)
-  };
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    // Call your backend route
+    const response = await axios.post("http://localhost:5000/upload-file", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    if (response.data.success) {
+      toast.success("Image uploaded successfully");
+      // Optionally update previewImage with uploaded URL from server
+      setPreviewImage(response.data.url); // if backend returns secure_url or similar
+    } else {
+      toast.error(response.data.message);
+    }
+  } catch (error) {
+    console.error("Upload error:", error);
+    toast.error("Upload failed: " + error.message);
+  }
+};
+
   return (
     <div className="text-white">
       {/* Display current image */}

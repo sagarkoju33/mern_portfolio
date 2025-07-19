@@ -167,6 +167,13 @@ const contactSchema = new mongoose.Schema({
   },
 });
 
+var profilePictureSchema = new mongoose.Schema({  
+    file_url:{  
+        type:String,
+        required:true  
+    }
+}); 
+
 module.exports = {
   Intro: mongoose.model("intros", introSchema),
   About: mongoose.model("abouts", aboutSchema),
@@ -174,4 +181,5 @@ module.exports = {
   Project: mongoose.model("projects", projectSchema),
   Education: mongoose.model("educations", educationSchema),
   Contact: mongoose.model("contacts", contactSchema),
+    ProfilePicture: mongoose.model("profilepictures", profilePictureSchema),
 };

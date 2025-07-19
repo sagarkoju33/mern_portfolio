@@ -12,7 +12,13 @@ const {
   Project,
   Education,
   Contact,
+  ProfilePicture,
 } = require("../models/portfolioModel");
+
+const {
+ Store,
+ 
+} = require("../models/store");
 // get all the portfolio data
 router.get("/get-portfolio-data", async (req, res) => {
   try {
@@ -22,6 +28,7 @@ router.get("/get-portfolio-data", async (req, res) => {
     const projects = await Project.find();
     const educations = await Education.find();
     const contacts = await Contact.find();
+      const store = await Store.find();
     res.status(200).json({
       intro: intros[0],
       about: about[0],
@@ -29,6 +36,7 @@ router.get("/get-portfolio-data", async (req, res) => {
       projects: projects,
       education: educations,
       contact: contacts[0],
+      profilePicture:  store[0]
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -74,57 +82,8 @@ router.post("/update-about", async (req, res) => {
   }
 });
 
-// Multer setup for image uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  },
-});
-const upload = multer({ storage });
 
 
-
-// Express.js (Multer Example)
-router.post("/update-about-with-image", upload.single("image"), async (req, res) => {
-  try {
-    const {
-      name,
-      contactNumber,
-      emailAddress,
-      linkedln,
-      githubAccount,
-      description1,
-      description2,
-      _id,
-    } = req.body;
-
-    const updatedData = {
-      name,
-      contactNumber,
-      emailAddress,
-      linkedln,
-      githubAccount,
-      description1,
-      description2,
-    };
-
-const isProd = process.env.NODE_ENV === "production";
-const baseUrl = isProd ? process.env.BASE_URL : `${req.protocol}://${req.get("host")}`;
-
-if (req.file) {
-  updatedData.lottieURL = `${baseUrl}/uploads/${req.file.filename}`;
-}
-    await About.findByIdAndUpdate(_id, updatedData);
-    res.send({ success: true, message: "Image updated successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ success: false, message: "Update failed" });
-  }
-});
 
 
 module.exports = router;
