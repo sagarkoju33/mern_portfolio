@@ -1,7 +1,7 @@
 
 
 const Upload = require("./upload");
-const Store = require("../models/store");
+const {Store} = require("../models/store");
 
 const uploadFile = async(req, res)=>{
  try {
@@ -10,10 +10,10 @@ const uploadFile = async(req, res)=>{
             file_url:upload.secure_url
         });
         var record = await store.save();
-        res.send({ succes:true, msg:'File Uploaded Successfully!', data:record });
+        res.status(200).send({ success: true, message:'File Uploaded Successfully!', data:record });
 
     } catch (error) {
-        res.send({ succes:false, msg:error.message });
+        res.status(500).send({ succes:false, message:error.message, data:record  });
     }
 
 }

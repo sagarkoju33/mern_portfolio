@@ -45,3 +45,7 @@ textarea {
   outline: none !important;
   border-color: transparent !important;
 }
+/* In your global CSS if needed */
+.Toastify__toast-container {
+  z-index: 9999 !important;
+}

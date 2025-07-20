@@ -1,4 +1,4 @@
-import React, { useRef, useState,useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Form } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { ShowLoading, HideLoading } from "../redux/rootSlice";
@@ -10,6 +10,7 @@ function AdminAbout() {
   const { portfolioData } = useSelector((state) => state.root);
   const fileInputRef = useRef();
   const [previewImage, setPreviewImage] = useState("");
+  const [imageUploading, setImageUploading] = useState(false);
   // const [selectedImageFile, setSelectedImageFile] = useState(null);
 
   const onFinish = async (val) => {
@@ -20,10 +21,10 @@ function AdminAbout() {
         _id: portfolioData.about._id,
       });
       dispatch(HideLoading());
-   if (response.data.success) {
-        toast.success(response.data.message); 
+      if (response.data.success) {
+        toast.success(response.data.message);
       } else {
-        toast.error(response.data.message); 
+        toast.error(response.data.message);
       }
     } catch (error) {
       dispatch(HideLoading());
@@ -31,64 +32,72 @@ function AdminAbout() {
     }
   };
 
-   useEffect(() => {
+  useEffect(() => {
     if (portfolioData?.about?.lottieURL) {
       setPreviewImage(portfolioData.about.lottieURL);
     }
-   }, [portfolioData?.about?.lottieURL]);
-  
+  }, [portfolioData?.about?.lottieURL]);
+
+
+
   const handleImageChange = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+    const file = e.target.files[0];
+    if (!file) return;
 
-  // Show local preview
-  const localUrl = URL.createObjectURL(file);
-  setPreviewImage(localUrl);
+    const localUrl = URL.createObjectURL(file);
+    setPreviewImage(localUrl);
 
-  try {
-    const formData = new FormData();
-    formData.append("file", file);
+    try {
+      setImageUploading(true); // Start local button loading
 
-    // Call your backend route
-    const response = await axios.post("http://localhost:5000/upload-file", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+      const formData = new FormData();
+      formData.append("file", file);
 
-    if (response.data.success) {
-      toast.success("Image uploaded successfully");
-      // Optionally update previewImage with uploaded URL from server
-      setPreviewImage(response.data.url); // if backend returns secure_url or similar
-    } else {
-      toast.error(response.data.message);
+      const response = await axios.post("http://localhost:5000/upload-file", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.data.success) {
+
+        toast.success(response.data.message);
+        setPreviewImage(response.data.url);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Upload failed: " + error.message);
+    } finally {
+      setImageUploading(false); // Stop local button loading
     }
-  } catch (error) {
-    console.error("Upload error:", error);
-    toast.error("Upload failed: " + error.message);
-  }
-};
+  };
+
+
 
   return (
     <div className="text-white">
       {/* Display current image */}
       <div className="mb-4 text-center">
         {previewImage && (
-        <img
-          src={previewImage}
-          alt="About"
-          className="w-32 h-32 rounded-full mx-auto object-cover border border-white"
-        />
-      )}
+          <img
+            src={previewImage}
+            alt="About"
+            className="w-32 h-32 rounded-full mx-auto object-cover border border-white"
+          />
+        )}
         <button
-          className="mt-2 px-4 py-1 bg-purple-700 text-white rounded"
+          className="mt-2 px-4 py-1 bg-purple-700 text-white rounded disabled:opacity-50"
           onClick={() => fileInputRef.current.click()}
+          disabled={imageUploading}
         >
-          Replace Image
+          {imageUploading ? "Uploading..." : "Replace Image"}
         </button>
+
         <input
           type="file"
           accept="image/*"
           ref={fileInputRef}
-           onChange={handleImageChange}
+          onChange={handleImageChange}
           className="hidden"
         />
       </div>
