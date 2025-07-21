@@ -66,7 +66,7 @@ router.post("/update-about", async (req, res) => {
     res.status(200).send({
       data: about,
       success: true,
-      message: "Update update successfully",
+      message: "About update successfully",
     });
   } catch (error) {
     res.status(500).send(error);
