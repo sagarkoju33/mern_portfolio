@@ -33,10 +33,21 @@ function AdminAbout() {
   };
 
   useEffect(() => {
-    if (portfolioData?.about?.lottieURL) {
-      setPreviewImage(portfolioData.about.lottieURL);
+    if (
+      portfolioData &&
+      Array.isArray(portfolioData.profilePicture) &&
+      portfolioData.profilePicture.length > 0 &&
+      portfolioData.profilePicture[0].fileUrl
+    ) {
+      console.log("aaaaaaaaaaa");
+      const url = portfolioData.profilePicture[0].fileUrl;
+      const fullUrl = url.startsWith("http")
+        ? url
+        : `http://localhost:5000${url.startsWith("/") ? "" : "/"}${url}`;
+      console.log("Resolved full URL:", fullUrl);
+      setPreviewImage(fullUrl);
     }
-  }, [portfolioData?.about?.lottieURL]);
+  }, [portfolioData]);
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
@@ -81,9 +92,12 @@ function AdminAbout() {
           <img
             src={previewImage}
             alt="About"
+            crossOrigin="anonymous"
             className="w-32 h-32 rounded-full mx-auto object-cover border border-white"
           />
         )}
+        <p className="text-xs text-gray-400">Image URL: {previewImage}</p>
+
         <button
           className="mt-2 px-4 py-1 bg-purple-700 text-white rounded disabled:opacity-50"
           onClick={() => fileInputRef.current.click()}

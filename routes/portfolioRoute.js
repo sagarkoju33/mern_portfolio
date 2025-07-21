@@ -20,7 +20,7 @@ router.get("/get-portfolio-data", async (req, res) => {
     const projects = await Project.find();
     const educations = await Education.find();
     const contacts = await Contact.find();
-    const store = await Store.find();
+    const store = await Store.find().sort({ _id: -1 });
     res.status(200).json({
       intro: intros[0],
       about: about[0],
@@ -28,7 +28,7 @@ router.get("/get-portfolio-data", async (req, res) => {
       projects: projects,
       education: educations,
       contact: contacts[0],
-      profilePicture: store,
+      profilePicture: store[0],
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
