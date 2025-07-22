@@ -1,7 +1,5 @@
 const router = require("express").Router();
 
-
-
 const {
   Intro,
   About,
@@ -12,10 +10,7 @@ const {
   ProfilePicture,
 } = require("../models/portfolioModel");
 
-const {
- Store,
- 
-} = require("../models/store");
+const { Store } = require("../models/store");
 // get all the portfolio data
 router.get("/get-portfolio-data", async (req, res) => {
   try {
@@ -25,7 +20,7 @@ router.get("/get-portfolio-data", async (req, res) => {
     const projects = await Project.find();
     const educations = await Education.find();
     const contacts = await Contact.find();
-      const store = await Store.find();
+    const store = await Store.find().sort({ _id: -1 });
     res.status(200).json({
       intro: intros[0],
       about: about[0],
@@ -33,7 +28,7 @@ router.get("/get-portfolio-data", async (req, res) => {
       projects: projects,
       education: educations,
       contact: contacts[0],
-      profilePicture:  store[0]
+      profilePicture: store[0],
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -59,7 +54,6 @@ router.post("/update-intro", async (req, res) => {
   }
 });
 
-
 // update About
 
 router.post("/update-about", async (req, res) => {
@@ -72,7 +66,7 @@ router.post("/update-about", async (req, res) => {
     res.status(200).send({
       data: about,
       success: true,
-      message: "Update update successfully",
+      message: "About update successfully",
     });
   } catch (error) {
     res.status(500).send(error);
@@ -88,13 +82,12 @@ router.post("/add-experience", async (req, res) => {
     res.status(200).send({
       data: experience,
       success: true,
-      message: "Experience added successfully"
-    })
+      message: "Experience added successfully",
+    });
   } catch (error) {
     res.status(500).send(error);
   }
-})
-
+});
 
 // update experience
 
@@ -113,27 +106,20 @@ router.post("/update-experience", async (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   }
+});
+// delete experience
 
-})
-  // delete experience
-
-  router.post("/delete-experience", async (req, res) => {
-    try {
-      const experience = await Experience.findOneAndDelete(
-        { _id: req.body._id },
-      );
-      res.status(200).send({
-        data: experience,
-        success: true,
-        message: "Experience delete successfully",
-      });
-    } catch (error) {
-      res.status(500).send(error);
-    }
-  });
-
-
-
-
+router.post("/delete-experience", async (req, res) => {
+  try {
+    const experience = await Experience.findOneAndDelete({ _id: req.body._id });
+    res.status(200).send({
+      data: experience,
+      success: true,
+      message: "Experience delete successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 module.exports = router;
