@@ -54,7 +54,6 @@ function AdminAbout() {
     }
   }, [portfolioData]);
 
-
   // Handle profile image upload
   const handleProfileImageChange = async (e) => {
     const file = e.target.files[0];
@@ -93,7 +92,6 @@ function AdminAbout() {
     }
   };
 
-
   const handleSkillImageChange = (skillId) => async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -105,11 +103,10 @@ function AdminAbout() {
       prevSkills.map((skill) =>
         skill.id === skillId
           ? {
-            ...skill,
-            preview: localUrl, // used for <img src=...>
-            localFile: file,
-
-          }
+              ...skill,
+              preview: localUrl, // used for <img src=...>
+              localFile: file,
+            }
           : skill
       )
     );
@@ -134,12 +131,12 @@ function AdminAbout() {
           prevSkills.map((skill) =>
             skill.id === skillId
               ? {
-                ...skill,
-                image: fileUrl, // backend-usable image URL
-                preview: fileUrl,
+                  ...skill,
+                  image: fileUrl, // backend-usable image URL
+                  preview: fileUrl,
 
-                // replace local preview with uploaded one
-              }
+                  // replace local preview with uploaded one
+                }
               : skill
           )
         );
@@ -174,8 +171,6 @@ function AdminAbout() {
     );
   };
 
-
-
   // Submit handler for the About form + skills
   const onFinish = async (val) => {
     try {
@@ -203,7 +198,7 @@ function AdminAbout() {
   };
 
   return (
-    <div className="text-white max-w-3xl mx-auto">
+    <div>
       {/* Profile Image Section */}
       <div className="mb-6 text-center">
         {previewImage && (
@@ -253,8 +248,6 @@ function AdminAbout() {
                 onClick={() => skillFileInputRefs[skill.id]?.current?.click()}
               />
 
-
-
               {/* <img
                 src={
                   skill.preview ||
@@ -268,7 +261,7 @@ function AdminAbout() {
 
               <input
                 type="text"
-                placeholder="Skill Name"
+                placeholder="Name"
                 value={skill.name}
                 onChange={(e) =>
                   handleSkillChange(skill.id, "name", e.target.value)
@@ -277,7 +270,7 @@ function AdminAbout() {
               />
               <input
                 type="text"
-                placeholder="Label"
+                placeholder="Level (0-1)"
                 value={skill.level}
                 onChange={(e) =>
                   handleSkillChange(skill.id, "level", e.target.value)
@@ -385,11 +378,21 @@ function AdminAbout() {
           />
         </Form.Item>
         <Form.Item
-          name="description"
-          label={<span className="text-white">About Yourself</span>}
+          name="description1"
+          label={<span className="text-white">Description 1</span>}
         >
           <textarea
-            placeholder="About Yourself"
+            placeholder="Description 1"
+            className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="description2"
+          label={<span className="text-white">Description 2</span>}
+        >
+          <textarea
+            placeholder="Description 2"
             className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
           />
         </Form.Item>
