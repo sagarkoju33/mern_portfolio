@@ -17,6 +17,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // make sure this is imported
 import AdminExperience from "./admin/experience";
 import { useCallback } from "react";
+import AdminEducation from "./admin/education";
+
 function App() {
   const dispatch = useDispatch();
   const { loading, portfolioData, reloadData } = useSelector(
@@ -63,6 +65,11 @@ function App() {
       key: "3",
       label: "Experience",
       children: <AdminExperience />,
+    },
+    {
+      key: "4",
+      label: "Education",
+      children: <AdminEducation />,
     },
   ];
 

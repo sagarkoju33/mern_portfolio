@@ -5,12 +5,12 @@ import axios from "axios";
 import { ShowLoading, HideLoading, ReloadData } from "../redux/rootSlice";
 import { toast } from "react-toastify";
 
-function AdminExperience() {
+function AdminEducation() {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
 
   const { portfolioData } = useSelector((state) => state.root);
-  const experiences = portfolioData?.experience || [];
+  const educations = portfolioData?.education || [];
   const [showAddEditModal, setShowAddEditModal] = React.useState(false);
   const [selectedItemForEdit, setSelectedItemForEdit] = React.useState(null);
 
@@ -27,12 +27,12 @@ function AdminExperience() {
       dispatch(ShowLoading());
       let response;
       if (selectedItemForEdit) {
-        response = await axios.post("/api/portfolio/update-experience", {
+        response = await axios.post("/api/portfolio/update-education", {
           ...value,
           _id: selectedItemForEdit._id,
         });
       } else {
-        response = await axios.post("/api/portfolio/add-experience", value);
+        response = await axios.post("/api/portfolio/add-education", value);
       }
 
       dispatch(HideLoading());
@@ -57,7 +57,7 @@ function AdminExperience() {
   const onDelete = async (item) => {
     try {
       dispatch(ShowLoading());
-      const response = await axios.post("/api/portfolio/delete-experience", {
+      const response = await axios.post("/api/portfolio/delete-education", {
         _id: item._id,
       });
       if (response.data.success) {
@@ -88,21 +88,22 @@ function AdminExperience() {
         </button>
       </div>
       <div className="grid grid-cols-4 gap-5">
-        {experiences.map((experience, index) => {
+        {educations.map((education, index) => {
           return (
             <div key={index} className="shadow border p-5 border-gray-400">
               <h1 className="text-primary text-xl font-bold h-10">
-                {experience.period}
+                {education.duration}
               </h1>
               <hr />
-              <h1 className="text-md mt-3">Company : {experience.company}</h1>
-              <h1 className="text-sm">Role : {experience.title}</h1>
-              <h1 className="text-sm">{experience.description}</h1>
+              <h1 className="text-md mt-3">Degree : {education.degree}</h1>
+              <h1 className="text-sm">Institution : {education.institution}</h1>
+              <h1 className="text-sm">Link : {education.link}</h1>
+              <h1 className="text-sm">{education.description}</h1>
               <div className="flex justify-end gap-5 mt-5">
                 <button
                   className="bg-red-500 text-white px-5 py-2 rounded-md"
                   onClick={() => {
-                    onDelete(experience);
+                    onDelete(education);
                   }}
                 >
                   Delete
@@ -110,7 +111,7 @@ function AdminExperience() {
                 <button
                   className="bg-green-400 text-white px-5 py-2 rounded-md"
                   onClick={() => {
-                    setSelectedItemForEdit(experience);
+                    setSelectedItemForEdit(education);
                     setShowAddEditModal(true);
                   }}
                 >
@@ -149,37 +150,47 @@ function AdminExperience() {
           initialValues={selectedItemForEdit}
         >
           <Form.Item
-            name="period"
-            label={<span className="text-white">Period</span>}
+            name="duration"
+            label={<span className="text-white">Duration</span>}
           >
             <input
               className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
-              placeholder="Period"
+              placeholder="Duration"
             />
           </Form.Item>
           <Form.Item
-            name="company"
-            label={<span className="text-white">Company</span>}
+            name="degree"
+            label={<span className="text-white">Degree</span>}
           >
             <input
               className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
-              placeholder="Company"
+              placeholder="Degree"
             />
           </Form.Item>
           <Form.Item
-            name="title"
-            label={<span className="text-white">Title</span>}
+            name="institution"
+            label={<span className="text-white">Institution</span>}
           >
             <input
               className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
-              placeholder="Title"
+              placeholder="Institution"
+            />
+          </Form.Item>
+
+          <Form.Item
+            name="link"
+            label={<span className="text-white">Link</span>}
+          >
+            <input
+              className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
+              placeholder="Link"
             />
           </Form.Item>
           <Form.Item
             name="description"
             label={<span className="text-white">Description</span>}
           >
-            <input
+            <textarea
               className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
               placeholder="Description"
             />
@@ -206,4 +217,4 @@ function AdminExperience() {
   );
 }
 
-export default AdminExperience;
+export default AdminEducation;

@@ -122,4 +122,53 @@ router.post("/delete-experience", async (req, res) => {
   }
 });
 
+// add education
+
+router.post("/add-education", async (req, res) => {
+  try {
+    const education = new Education(req.body);
+    await education.save();
+    res.status(200).send({
+      data: education,
+      success: true,
+      message: "Education added successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+// update education
+
+router.post("/update-education", async (req, res) => {
+  try {
+    const education = await Education.findOneAndUpdate(
+      { _id: req.body._id },
+      req.body,
+      { new: true }
+    );
+    res.status(200).send({
+      data: education,
+      success: true,
+      message: "Education update successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+// delete education
+
+router.post("/delete-education", async (req, res) => {
+  try {
+    const education = await Education.findOneAndDelete({ _id: req.body._id });
+    res.status(200).send({
+      data: education,
+      success: true,
+      message: "Education delete successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
 module.exports = router;
