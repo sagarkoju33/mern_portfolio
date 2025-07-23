@@ -61,11 +61,11 @@ function AdminEducation() {
         _id: item._id,
       });
       if (response.data.success) {
-        message.success(response.data.message);
+        toast.success(response.data.message);
         dispatch(HideLoading());
         dispatch(ReloadData(true));
       } else {
-        message.error(response.data.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
       dispatch(HideLoading());
@@ -84,7 +84,7 @@ function AdminEducation() {
             setShowAddEditModal(true);
           }}
         >
-          Add Experience
+          Add Education
         </button>
       </div>
       <div className="grid grid-cols-4 gap-5">
@@ -126,7 +126,7 @@ function AdminEducation() {
         open={showAddEditModal}
         title={
           <span className="text-white">
-            {selectedItemForEdit ? "Edit Experience" : "Add Experience"}
+            {selectedItemForEdit ? "Edit Education" : "Add Education"}
           </span>
         }
         footer={null}

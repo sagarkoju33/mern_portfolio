@@ -18,6 +18,7 @@ import "react-toastify/dist/ReactToastify.css"; // make sure this is imported
 import AdminExperience from "./admin/experience";
 import { useCallback } from "react";
 import AdminEducation from "./admin/education";
+import AdminProjects from "./admin/project";
 
 function App() {
   const dispatch = useDispatch();
@@ -70,6 +71,11 @@ function App() {
       key: "4",
       label: "Education",
       children: <AdminEducation />,
+    },
+    {
+      key: "5",
+      label: "Project",
+      children: <AdminProjects />,
     },
   ];
 
