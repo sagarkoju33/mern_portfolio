@@ -104,7 +104,7 @@ const projectSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    required: true,
+    required: false,
   },
   link: {
     type: String,
@@ -112,7 +112,7 @@ const projectSchema = new mongoose.Schema({
   },
   technologies: {
     type: Array,
-    required: true,
+    required: false,
   },
 });
 
@@ -167,12 +167,12 @@ const contactSchema = new mongoose.Schema({
   },
 });
 
-var profilePictureSchema = new mongoose.Schema({  
-    file_url:{  
-        type:String,
-        required:true  
-    }
-}); 
+var profilePictureSchema = new mongoose.Schema({
+  file_url: {
+    type: String,
+    required: true,
+  },
+});
 
 module.exports = {
   Intro: mongoose.model("intros", introSchema),
@@ -181,5 +181,5 @@ module.exports = {
   Project: mongoose.model("projects", projectSchema),
   Education: mongoose.model("educations", educationSchema),
   Contact: mongoose.model("contacts", contactSchema),
-    ProfilePicture: mongoose.model("profilepictures", profilePictureSchema),
+  ProfilePicture: mongoose.model("profilepictures", profilePictureSchema),
 };

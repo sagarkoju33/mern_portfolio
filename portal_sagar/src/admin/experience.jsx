@@ -87,7 +87,7 @@ function AdminExperience() {
           Add Experience
         </button>
       </div>
-      <div className="grid grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {experiences.map((experience, index) => {
           return (
             <div key={index} className="shadow border p-5 border-gray-400">
