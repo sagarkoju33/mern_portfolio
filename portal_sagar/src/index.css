@@ -2,10 +2,10 @@ input,
 textarea {
   height: 40px;
   border: 1px solid grey;
-  width: calc(100% - 32px); /* 16px left + 16px right */
+  /* width: calc(100% - 32px);  */
   padding-left: 16px;
   margin-right: 16px;
- /* margin-left: 20px; */
+  /* margin-left: 20px; */
   box-sizing: border-box;
 }
 
@@ -40,7 +40,9 @@ textarea {
 .custom-tabs .ant-tabs-ink-bar {
   background-color: #9333ea; /* purple-600 */
 }
-.ant-input:focus, .ant-input-focused, .ant-input:active {
+.ant-input:focus,
+.ant-input-focused,
+.ant-input:active {
   box-shadow: none !important;
   outline: none !important;
   border-color: transparent !important;

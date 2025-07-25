@@ -1,5 +1,5 @@
 const router = require("express").Router();
-
+const bcrypt = require("bcryptjs");
 const {
   Intro,
   About,
@@ -11,6 +11,7 @@ const {
 } = require("../models/portfolioModel");
 
 const { Store } = require("../models/store");
+const User = require("../models/userModel");
 // get all the portfolio data
 router.get("/get-portfolio-data", async (req, res) => {
   try {
@@ -217,6 +218,51 @@ router.post("/delete-project", async (req, res) => {
     });
   } catch (error) {
     res.status(500).send(error);
+  }
+});
+
+// admin login
+
+router.post("/admin-login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    console.log("Login attempt:", username);
+
+    const users = await User.findOne({
+      username: { $regex: new RegExp("^" + username + "$", "i") },
+    });
+
+    console.log("User from DB:", users);
+
+    if (!users) {
+      return res.status(401).send({
+        success: false,
+        message: "Invalid username",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(password, users.password);
+    if (!isMatch) {
+      return res.status(401).send({
+        success: false,
+        message: "Invalid password",
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      message: "Login Successfully",
+      data: {
+        username: users.username,
+        id: users._id,
+      },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).send({
+      success: false,
+      message: "Something went wrong",
+    });
   }
 });
 
