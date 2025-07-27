@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { HideLoading, ShowLoading } from "../redux/rootSlice";
@@ -17,9 +17,9 @@ function Login() {
       dispatch(HideLoading());
       if (response.data.success) {
         toast.success(response.data.message);
+        console.log(response.data.message);
         navigate("/dashboard");
-        // localStorage.setItem("token", response.data);
-        // window.location.href = "/admin";
+
       } else {
         toast.error(response.data.message);
       }

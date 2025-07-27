@@ -1,5 +1,6 @@
 const router = require("express").Router();
-const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer"); // ✅ Required for email
+
 const {
   Intro,
   About,
@@ -11,7 +12,7 @@ const {
 } = require("../models/portfolioModel");
 
 const { Store } = require("../models/store");
-const User = require("../models/userModel");
+const { User } = require("../models/userModel");
 // get all the portfolio data
 router.get("/get-portfolio-data", async (req, res) => {
   try {
@@ -222,41 +223,32 @@ router.post("/delete-project", async (req, res) => {
 });
 
 // admin login
-
 router.post("/admin-login", async (req, res) => {
   try {
-    const { username, password } = req.body;
-    console.log("Login attempt:", username);
-
-    const users = await User.findOne({
-      username: { $regex: new RegExp("^" + username + "$", "i") },
+    const user = await User.findOne({
+      username: req.body.username,
+      password: req.body.password,
     });
 
-    console.log("User from DB:", users);
-
-    if (!users) {
-      return res.status(401).send({
+    if (user) {
+      res.status(200).send({
+        success: true,
+        message: "Login Successfully",
+        data: {
+          username: user.username,
+          id: user._id,
+        },
+      });
+    }
+    else {
+      res.status(200).send({
         success: false,
-        message: "Invalid username",
+        message: "Invalid user name and password",
+        data: user,
       });
     }
 
-    const isMatch = await bcrypt.compare(password, users.password);
-    if (!isMatch) {
-      return res.status(401).send({
-        success: false,
-        message: "Invalid password",
-      });
-    }
 
-    res.status(200).send({
-      success: true,
-      message: "Login Successfully",
-      data: {
-        username: users.username,
-        id: users._id,
-      },
-    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).send({
@@ -265,5 +257,46 @@ router.post("/admin-login", async (req, res) => {
     });
   }
 });
+
+router.post('/send-feedback', async (req, res) => {
+  const { name, contactNumber, email, feedback } = req.body;
+
+  if (!name || !contactNumber || !email || !feedback) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  // Nodemailer setup
+  let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER, // your gmail
+      pass: process.env.EMAIL_PASS  // your gmail app password
+    }
+  });
+
+  // Email options
+  let mailOptions = {
+    from: `"Feedback App" <${process.env.EMAIL_USER}>`,
+    to: process.env.EMAIL_USER, // send to your own Gmail
+    subject: 'New Feedback Received',
+    html: `
+      <h3>Feedback Details</h3>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Contact Number:</strong> ${contactNumber}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Feedback:</strong> ${feedback}</p>
+    `
+  };
+
+  // Send email
+  try {
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ success: true, message: 'Feedback sent successfully' });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ message: 'Failed to send feedback' });
+  }
+});
+
 
 module.exports = router;
