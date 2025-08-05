@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ShowLoading, HideLoading } from "../redux/rootSlice";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import { BASE_URL } from "./env";
 function AdminIntro() {
   const dispatch = useDispatch();
   const { portfolioData } = useSelector((state) => state.root);
@@ -12,10 +12,13 @@ function AdminIntro() {
   const onFinish = async (val) => {
     try {
       dispatch(ShowLoading());
-      const response = await axios.post("/api/portfolio/update-intro", {
-        ...val,
-        _id: portfolioData.intro._id,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/api/portfolio/update-intro`,
+        {
+          ...val,
+          _id: portfolioData.intro._id,
+        }
+      );
       dispatch(HideLoading());
 
       if (response.data.success) {

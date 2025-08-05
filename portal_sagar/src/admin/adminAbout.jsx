@@ -5,6 +5,7 @@ import { ShowLoading, HideLoading } from "../redux/rootSlice";
 import axios from "axios";
 import { toast } from "react-toastify";
 import defaultSkillImage from "../assets/download.jpg";
+import { BASE_URL } from "./env";
 
 function AdminAbout() {
   const dispatch = useDispatch();
@@ -69,13 +70,9 @@ function AdminAbout() {
       formData.append("file", file);
       formData.append("isProfile", true); // ✅ Send as string
 
-      const response = await axios.post(
-        "http://localhost:5000/upload-file",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await axios.post(`${BASE_URL}/upload-file`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.data.success) {
         toast.success(response.data.message);
@@ -115,13 +112,9 @@ function AdminAbout() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await axios.post(
-        "http://localhost:5000/upload-file",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const response = await axios.post(`${BASE_URL}/upload-file`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       if (response.data.success && response.data.data?.file_url) {
         const fileUrl = response.data.data.file_url;
@@ -182,7 +175,10 @@ function AdminAbout() {
         skills,
       };
 
-      const response = await axios.post("/api/portfolio/update-about", payload);
+      const response = await axios.post(
+        `${BASE_URL}/api/portfolio/update-about`,
+        payload
+      );
       dispatch(HideLoading());
 
       if (response.data.success) {

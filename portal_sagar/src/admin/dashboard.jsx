@@ -19,7 +19,7 @@ import AdminExperience from "./experience";
 import { useCallback } from "react";
 import AdminEducation from "./education";
 import AdminProjects from "./project";
-
+import { BASE_URL } from "./env";
 function Dashboard() {
   const dispatch = useDispatch();
   const { loading, portfolioData, reloadData } = useSelector(
@@ -29,7 +29,9 @@ function Dashboard() {
   const getPortfolioData = useCallback(async () => {
     dispatch(ShowLoading());
     try {
-      const response = await axios.get("api/portfolio/get-portfolio-data");
+      const response = await axios.get(
+        `${BASE_URL}/api/portfolio/get-portfolio-data`
+      );
       dispatch(SetPortfolioData(response.data));
       dispatch(ReloadData(false));
     } catch (error) {

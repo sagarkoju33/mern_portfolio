@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { ShowLoading, HideLoading, ReloadData } from "../redux/rootSlice";
 import { toast } from "react-toastify";
-
+import { BASE_URL } from "./env";
 function AdminExperience() {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -27,12 +27,18 @@ function AdminExperience() {
       dispatch(ShowLoading());
       let response;
       if (selectedItemForEdit) {
-        response = await axios.post("/api/portfolio/update-experience", {
-          ...value,
-          _id: selectedItemForEdit._id,
-        });
+        response = await axios.post(
+          `${BASE_URL}/api/portfolio/update-experience`,
+          {
+            ...value,
+            _id: selectedItemForEdit._id,
+          }
+        );
       } else {
-        response = await axios.post("/api/portfolio/add-experience", value);
+        response = await axios.post(
+          `${BASE_URL}/api/portfolio/add-experience`,
+          value
+        );
       }
 
       dispatch(HideLoading());
@@ -57,9 +63,12 @@ function AdminExperience() {
   const onDelete = async (item) => {
     try {
       dispatch(ShowLoading());
-      const response = await axios.post("/api/portfolio/delete-experience", {
-        _id: item._id,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/api/portfolio/delete-experience`,
+        {
+          _id: item._id,
+        }
+      );
       if (response.data.success) {
         toast.success(response.data.message);
         dispatch(HideLoading());

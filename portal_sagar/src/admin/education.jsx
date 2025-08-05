@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { ShowLoading, HideLoading, ReloadData } from "../redux/rootSlice";
 import { toast } from "react-toastify";
-
+import { BASE_URL } from "./env";
 function AdminEducation() {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -27,12 +27,18 @@ function AdminEducation() {
       dispatch(ShowLoading());
       let response;
       if (selectedItemForEdit) {
-        response = await axios.post("/api/portfolio/update-education", {
-          ...value,
-          _id: selectedItemForEdit._id,
-        });
+        response = await axios.post(
+          `${BASE_URL}/api/portfolio/update-education`,
+          {
+            ...value,
+            _id: selectedItemForEdit._id,
+          }
+        );
       } else {
-        response = await axios.post("/api/portfolio/add-education", value);
+        response = await axios.post(
+          `${BASE_URL}/api/portfolio/add-education`,
+          value
+        );
       }
 
       dispatch(HideLoading());

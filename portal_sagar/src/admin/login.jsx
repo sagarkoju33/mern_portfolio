@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { HideLoading, ShowLoading } from "../redux/rootSlice";
 import { useDispatch } from "react-redux";
-
+import { BASE_URL } from "./env"; // Adjust the import based on your project structure
 function Login() {
   const [user, setUser] = useState({ username: "", password: "" });
   const navigate = useNavigate();
@@ -13,13 +13,15 @@ function Login() {
   const handleLogin = async () => {
     try {
       dispatch(ShowLoading());
-      const response = await axios.post("/api/portfolio/admin-login", user);
+      const response = await axios.post(
+        `${BASE_URL}/api/portfolio/admin-login`,
+        user
+      );
       dispatch(HideLoading());
       if (response.data.success) {
         toast.success(response.data.message);
         console.log(response.data.message);
         navigate("/dashboard");
-
       } else {
         toast.error(response.data.message);
       }
