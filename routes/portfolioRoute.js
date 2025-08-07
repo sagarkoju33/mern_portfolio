@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const nodemailer = require("nodemailer"); // ✅ Required for email
-
+const multer = require("multer");
 const {
   Intro,
   About,
@@ -13,6 +13,10 @@ const {
 
 const { Store } = require("../models/store");
 const { User } = require("../models/userModel");
+const fs = require("fs");
+const path = require("path");
+const { Blog } = require("../models/blogModel");
+const Upload = require("./upload");
 // get all the portfolio data
 router.get("/get-portfolio-data", async (req, res) => {
   try {
@@ -22,6 +26,7 @@ router.get("/get-portfolio-data", async (req, res) => {
     const projects = await Project.find();
     const educations = await Education.find();
     const contacts = await Contact.find();
+    const blogs = await Blog.find();
     const store = await Store.find().sort({ _id: -1 });
     res.status(200).json({
       intro: intros[0],
@@ -31,6 +36,7 @@ router.get("/get-portfolio-data", async (req, res) => {
       education: educations,
       contact: contacts[0],
       profilePicture: store[0],
+      blogs: blogs,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -239,16 +245,13 @@ router.post("/admin-login", async (req, res) => {
           id: user._id,
         },
       });
-    }
-    else {
+    } else {
       res.status(200).send({
         success: false,
         message: "Invalid user name and password",
         data: user,
       });
     }
-
-
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).send({
@@ -258,45 +261,130 @@ router.post("/admin-login", async (req, res) => {
   }
 });
 
-router.post('/send-feedback', async (req, res) => {
+router.post("/send-feedback", async (req, res) => {
   const { name, contactNumber, email, feedback } = req.body;
 
   if (!name || !contactNumber || !email || !feedback) {
-    return res.status(400).json({ message: 'All fields are required' });
+    return res.status(400).json({ message: "All fields are required" });
   }
 
   // Nodemailer setup
   let transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: "gmail",
     auth: {
       user: process.env.EMAIL_USER, // your gmail
-      pass: process.env.EMAIL_PASS  // your gmail app password
-    }
+      pass: process.env.EMAIL_PASS, // your gmail app password
+    },
   });
 
   // Email options
   let mailOptions = {
     from: `"Feedback App" <${process.env.EMAIL_USER}>`,
     to: process.env.EMAIL_USER, // send to your own Gmail
-    subject: 'New Feedback Received',
+    subject: "New Feedback Received",
     html: `
       <h3>Feedback Details</h3>
       <p><strong>Name:</strong> ${name}</p>
       <p><strong>Contact Number:</strong> ${contactNumber}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Feedback:</strong> ${feedback}</p>
-    `
+    `,
   };
 
   // Send email
   try {
     await transporter.sendMail(mailOptions);
-    res.status(200).json({ success: true, message: 'Feedback sent successfully' });
+    res
+      .status(200)
+      .json({ success: true, message: "Feedback sent successfully" });
   } catch (error) {
-    console.error('Error sending email:', error);
-    res.status(500).json({ message: 'Failed to send feedback' });
+    console.error("Error sending email:", error);
+    res.status(500).json({ message: "Failed to send feedback" });
   }
 });
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = "./uploads";
+    if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath);
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(
+      null,
+      file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
+    );
+  },
+});
+const upload = multer({ storage });
+router.post("/submit-form", upload.single("imageBanner"), async (req, res) => {
+  try {
+    const { title, description, datetime, link } = req.body;
+    const imageBanner = req.file;
+
+    // Validation
+    if (!title || !description || !datetime || !link || !imageBanner) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+    const upload = await Upload.uploadFile(req.file.path);
+    const fileUrl = upload.secure_url;
+    // Save to MongoDB
+    const newBlog = new Blog({
+      title,
+      description,
+      datetime,
+      link,
+      imageUrl: fileUrl,
+    });
+
+    await newBlog.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Blog submitted and saved successfully",
+      data: newBlog,
+    });
+  } catch (error) {
+    console.error("Error saving blog:", error);
+
+    // Handle duplicate title error
+    if (error.code === 11000) {
+      return res.status(400).json({ message: "Title must be unique" });
+    }
+
+    res.status(500).json({ message: "Server error while saving blog" });
+  }
+});
+
+// delete blog
+
+router.post("/delete-blog", async (req, res) => {
+  try {
+    const blog = await Blog.findOneAndDelete({ _id: req.body._id });
+    res.status(200).send({
+      data: blog,
+      success: true,
+      message: "Blog deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+// update blog
+router.post("/update-blog", async (req, res) => {
+  try {
+    const blog = await Blog.findOneAndUpdate({ _id: req.body._id }, req.body, {
+      new: true,
+    });
+    res.status(200).send({
+      data: blog,
+      success: true,
+      message: "Blog update successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 module.exports = router;
