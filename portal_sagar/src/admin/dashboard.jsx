@@ -19,6 +19,7 @@ import AdminExperience from "./experience";
 import { useCallback } from "react";
 import AdminEducation from "./education";
 import AdminProjects from "./project";
+import AdminBlogs from "./blog";
 import { BASE_URL } from "./env";
 function Dashboard() {
   const dispatch = useDispatch();
@@ -78,6 +79,11 @@ function Dashboard() {
       key: "5",
       label: "Project",
       children: <AdminProjects />,
+    },
+    {
+      key: "6",
+      label: "Blog",
+      children: <AdminBlogs />,
     },
   ];
 
