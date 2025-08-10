@@ -105,7 +105,8 @@ function AdminProjects() {
               </h1>
               <hr />
 
-              <h1 className="text-sm mb-4 mt-4">Link : {project.link}</h1>
+              <h1 className="text-sm"
+                style={{ wordBreak: "break-word" }}>Link : {project.link}</h1>
               <h1 className="text-sm">{project.description}</h1>
               <div className="flex justify-end gap-5 mt-5">
                 <button
