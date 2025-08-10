@@ -28,7 +28,8 @@ textarea {
 }
 
 .custom-tabs .ant-tabs-tab {
-  color: #9ca3af; /* gray-400 */
+  color: #9ca3af;
+  /* gray-400 */
   transition: all 0.3s ease;
 }
 
@@ -38,8 +39,10 @@ textarea {
 }
 
 .custom-tabs .ant-tabs-ink-bar {
-  background-color: #9333ea; /* purple-600 */
+  background-color: #9333ea;
+  /* purple-600 */
 }
+
 .ant-input:focus,
 .ant-input-focused,
 .ant-input:active {
@@ -47,7 +50,22 @@ textarea {
   outline: none !important;
   border-color: transparent !important;
 }
+
 /* In your global CSS if needed */
 .Toastify__toast-container {
   z-index: 9999 !important;
+}
+
+/* Force white placeholder color in antd DatePicker input */
+.white-placeholder .ant-picker-input>input::placeholder {
+  color: white !important;
+  opacity: 1 !important;
+
+  /* Optional: to ensure visibility */
+  /* Make placeholder fully visible */
+}
+
+/* Optional: keep input text white */
+.white-placeholder .ant-picker-input>input {
+  color: white !important;
 }

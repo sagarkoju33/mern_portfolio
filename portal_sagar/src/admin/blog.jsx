@@ -1,10 +1,12 @@
-import { Modal, Form, message } from "antd";
+import { Modal, Form, message, DatePicker } from "antd";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { ShowLoading, HideLoading, ReloadData } from "../redux/rootSlice";
 import { toast } from "react-toastify";
 import { BASE_URL } from "./env";
+import dayjs from "dayjs";
+
 function AdminBlogs() {
   const dispatch = useDispatch();
   const [form] = Form.useForm();
@@ -14,30 +16,64 @@ function AdminBlogs() {
   const [showAddEditModal, setShowAddEditModal] = React.useState(false);
   const [selectedItemForEdit, setSelectedItemForEdit] = React.useState(null);
 
+  // React.useEffect(() => {
+  //   if (selectedItemForEdit) {
+  //     form.setFieldsValue(selectedItemForEdit);
+  //   } else {
+  //     form.resetFields(); // ✅ Clears on Add
+  //   }
+  // }, [selectedItemForEdit, form]);
+
+
   React.useEffect(() => {
     if (selectedItemForEdit) {
-      form.setFieldsValue(selectedItemForEdit);
+      const datetimeVal = selectedItemForEdit.datetime ? dayjs(selectedItemForEdit.datetime) : null;
+      console.log("Setting form datetime:", datetimeVal);
+      form.setFieldsValue({
+        ...selectedItemForEdit,
+        datetime: datetimeVal,
+      });
     } else {
-      form.resetFields(); // ✅ Clears on Add
+      form.resetFields();
     }
   }, [selectedItemForEdit, form]);
 
-  const onFinish = async (value) => {
+
+
+
+
+  const onFinish = async (values) => {
     try {
       dispatch(ShowLoading());
+
+      // Create FormData instance to hold text fields + file
+      const formData = new FormData();
+
+      // Append all form fields (except image)
+      formData.append("title", values.title);        // assuming 'degree' is title
+      formData.append("description", values.description);
+      formData.append("datetime", values.datetime?.format("YYYY-MM-DD")); // DatePicker value is a moment/dayjs object
+      formData.append("link", values.link);
+
+      // Append the file - values.image is a FileList or array from Upload component
+      // If native input file (FileList):
+      if (values.imageUrl && values.imageUrl.length > 0) {
+        formData.append("imageBanner", values.imageUrl[0]);
+      }
+
       let response;
       if (selectedItemForEdit) {
+        formData.append("_id", selectedItemForEdit._id);
         response = await axios.post(
-          `${BASE_URL}/api/portfolio/update-education`,
-          {
-            ...value,
-            _id: selectedItemForEdit._id,
-          }
+          `${BASE_URL}/api/portfolio/update-blog`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
         );
       } else {
         response = await axios.post(
-          `${BASE_URL}/api/portfolio/add-education`,
-          value
+          `/api/portfolio/submit-blog`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
         );
       }
 
@@ -45,20 +81,18 @@ function AdminBlogs() {
 
       if (response.data.success) {
         toast.success(response.data.message);
-
-        // ✅ success message
         setShowAddEditModal(false);
         setSelectedItemForEdit(null);
-        dispatch(HideLoading());
         dispatch(ReloadData(true));
       } else {
-        toast.error(response.data.message); // ❌ error message
+        toast.error(response.data.message);
       }
     } catch (error) {
       dispatch(HideLoading());
       toast.error(error.message || "Something went wrong");
     }
   };
+
 
   const onDelete = async (item) => {
     try {
@@ -98,11 +132,18 @@ function AdminBlogs() {
           return (
             <div key={index} className="shadow border p-5 border-gray-400">
               <h1 className="text-primary text-xl font-bold h-10">
-                {blog.datetime}
+                Date: {blog.datetime?.substring(0, 10)}
               </h1>
+
               <hr />
               <h1 className="text-md mt-3">Description : {blog.description}</h1>
-              <h1 className="text-sm">Link : {blog.link}</h1>
+              <h1
+                className="text-sm"
+                style={{ wordBreak: "break-word" }}
+              >
+                Link : {blog.link}
+              </h1>
+
               <h1 className="text-sm">{blog.description}</h1>
               <div className="flex justify-end gap-5 mt-5">
                 <button
@@ -152,36 +193,35 @@ function AdminBlogs() {
           form={form}
           layout="vertical"
           onFinish={onFinish}
-          initialValues={selectedItemForEdit}
+        // initialValues={selectedItemForEdit}
         >
           <Form.Item
-            name="duration"
-            label={<span className="text-white">Duration</span>}
+            name="datetime"
+            label={<span className="text-white">Date</span>}
           >
-            <input
-              className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
-              placeholder="Duration"
-            />
-          </Form.Item>
-          <Form.Item
-            name="degree"
-            label={<span className="text-white">Degree</span>}
-          >
-            <input
-              className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
-              placeholder="Degree"
-            />
-          </Form.Item>
-          <Form.Item
-            name="institution"
-            label={<span className="text-white">Institution</span>}
-          >
-            <input
-              className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
-              placeholder="Institution"
+            <DatePicker
+              format="YYYY-MM-DD"
+              placeholder="Date"
+              className="white-placeholder w-full border p-2 rounded bg-transparent text-white"
+              style={{
+                backgroundColor: "transparent",
+                borderColor: "white",
+                color: "white",
+
+              }}
+
             />
           </Form.Item>
 
+          <Form.Item
+            name="title"
+            label={<span className="text-white">Title</span>}
+          >
+            <input
+              className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
+              placeholder="Title"
+            />
+          </Form.Item>
           <Form.Item
             name="link"
             label={<span className="text-white">Link</span>}
@@ -198,6 +238,24 @@ function AdminBlogs() {
             <textarea
               className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
               placeholder="Description"
+            />
+          </Form.Item>
+          <Form.Item
+            name="imageUrl"
+            label={<span className="text-white">Image</span>}
+            valuePropName="fileList"  // for uploading files
+            getValueFromEvent={(e) => {
+              // Normalize the event to get the file list
+              if (Array.isArray(e)) {
+                return e;
+              }
+              return e?.target?.files;
+            }}
+          >
+            <input
+              type="file"
+              accept="image/*"
+              className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
             />
           </Form.Item>
 

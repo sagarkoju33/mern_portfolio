@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const nodemailer = require("nodemailer"); // ✅ Required for email
 const multer = require("multer");
+const moment = require('moment');
 const {
   Intro,
   About,
@@ -318,22 +319,28 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-router.post("/submit-form", upload.single("imageBanner"), async (req, res) => {
+router.post("/submit-blog", upload.single("imageBanner"), async (req, res) => {
   try {
     const { title, description, datetime, link } = req.body;
     const imageBanner = req.file;
 
-    // Validation
     if (!title || !description || !datetime || !link || !imageBanner) {
       return res.status(400).json({ message: "All fields are required" });
     }
+
+    // Parse datetime string and keep only date part
+    const formattedDate = moment(datetime, "YYYY-MM-DD").startOf('day').toDate();
+    // Or if not using moment:
+    // const formattedDate = new Date(datetime);
+    // formattedDate.setHours(0, 0, 0, 0);
+
     const upload = await Upload.uploadFile(req.file.path);
     const fileUrl = upload.secure_url;
-    // Save to MongoDB
+
     const newBlog = new Blog({
       title,
       description,
-      datetime,
+      datetime: formattedDate,  // store as Date object with time set to 00:00:00
       link,
       imageUrl: fileUrl,
     });
@@ -348,7 +355,6 @@ router.post("/submit-form", upload.single("imageBanner"), async (req, res) => {
   } catch (error) {
     console.error("Error saving blog:", error);
 
-    // Handle duplicate title error
     if (error.code === 11000) {
       return res.status(400).json({ message: "Title must be unique" });
     }
