@@ -24,19 +24,31 @@ function AdminBlogs() {
   //     form.resetFields(); // ✅ Clears on Add
   //   }
   // }, [selectedItemForEdit, form]);
-
+  React.useEffect(() => {
+    if (showAddEditModal) {
+      const savedPreview = localStorage.getItem("imagePreview");
+      if (savedPreview) {
+        setPreview(savedPreview);
+      }
+    }
+  }, [showAddEditModal]);
   React.useEffect(() => {
     if (selectedItemForEdit) {
       const datetimeVal = selectedItemForEdit.datetime
         ? dayjs(selectedItemForEdit.datetime)
         : null;
-      // console.log("Setting form datetime:", datetimeVal);
       form.setFieldsValue({
         ...selectedItemForEdit,
         datetime: datetimeVal,
       });
+
+      // Clear previous preview and set preview to existing blog image
+      setPreview(selectedItemForEdit.imageUrl || null);
+      localStorage.removeItem("imagePreview"); // Clear old preview
     } else {
       form.resetFields();
+      setPreview(null);
+      localStorage.removeItem("imagePreview");
     }
   }, [selectedItemForEdit, form]);
 
@@ -46,6 +58,7 @@ function AdminBlogs() {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result); // Base64 string for preview
+        localStorage.setItem("imagePreview", reader.result);
       };
       reader.readAsDataURL(file);
     }
