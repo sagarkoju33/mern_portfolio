@@ -15,6 +15,7 @@ function AdminBlogs() {
   const blogs = portfolioData?.blogs || [];
   const [showAddEditModal, setShowAddEditModal] = React.useState(false);
   const [selectedItemForEdit, setSelectedItemForEdit] = React.useState(null);
+  const [preview, setPreview] = React.useState(null);
 
   // React.useEffect(() => {
   //   if (selectedItemForEdit) {
@@ -24,11 +25,12 @@ function AdminBlogs() {
   //   }
   // }, [selectedItemForEdit, form]);
 
-
   React.useEffect(() => {
     if (selectedItemForEdit) {
-      const datetimeVal = selectedItemForEdit.datetime ? dayjs(selectedItemForEdit.datetime) : null;
-      console.log("Setting form datetime:", datetimeVal);
+      const datetimeVal = selectedItemForEdit.datetime
+        ? dayjs(selectedItemForEdit.datetime)
+        : null;
+      // console.log("Setting form datetime:", datetimeVal);
       form.setFieldsValue({
         ...selectedItemForEdit,
         datetime: datetimeVal,
@@ -38,9 +40,16 @@ function AdminBlogs() {
     }
   }, [selectedItemForEdit, form]);
 
-
-
-
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result); // Base64 string for preview
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const onFinish = async (values) => {
     try {
@@ -50,7 +59,7 @@ function AdminBlogs() {
       const formData = new FormData();
 
       // Append all form fields (except image)
-      formData.append("title", values.title);        // assuming 'degree' is title
+      formData.append("title", values.title); // assuming 'degree' is title
       formData.append("description", values.description);
       formData.append("datetime", values.datetime?.format("YYYY-MM-DD")); // DatePicker value is a moment/dayjs object
       formData.append("link", values.link);
@@ -71,7 +80,7 @@ function AdminBlogs() {
         );
       } else {
         response = await axios.post(
-          `/api/portfolio/submit-blog`,
+          `${BASE_URL}/api/portfolio/submit-blog`,
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
@@ -92,7 +101,6 @@ function AdminBlogs() {
       toast.error(error.message || "Something went wrong");
     }
   };
-
 
   const onDelete = async (item) => {
     try {
@@ -137,14 +145,10 @@ function AdminBlogs() {
 
               <hr />
               <h1 className="text-md mt-3">Description : {blog.description}</h1>
-              <h1
-                className="text-sm"
-                style={{ wordBreak: "break-word" }}
-              >
+              <h1 className="text-sm" style={{ wordBreak: "break-word" }}>
                 Link : {blog.link}
               </h1>
 
-              <h1 className="text-sm">{blog.description}</h1>
               <div className="flex justify-end gap-5 mt-5">
                 <button
                   className="bg-red-500 text-white px-5 py-2 rounded-md"
@@ -193,7 +197,7 @@ function AdminBlogs() {
           form={form}
           layout="vertical"
           onFinish={onFinish}
-        // initialValues={selectedItemForEdit}
+          // initialValues={selectedItemForEdit}
         >
           <Form.Item
             name="datetime"
@@ -207,9 +211,7 @@ function AdminBlogs() {
                 backgroundColor: "transparent",
                 borderColor: "white",
                 color: "white",
-
               }}
-
             />
           </Form.Item>
 
@@ -243,9 +245,8 @@ function AdminBlogs() {
           <Form.Item
             name="imageUrl"
             label={<span className="text-white">Image</span>}
-            valuePropName="fileList"  // for uploading files
+            valuePropName="fileList"
             getValueFromEvent={(e) => {
-              // Normalize the event to get the file list
               if (Array.isArray(e)) {
                 return e;
               }
@@ -255,11 +256,21 @@ function AdminBlogs() {
             <input
               type="file"
               accept="image/*"
+              onChange={handleFileChange}
               className="w-full border p-2 rounded bg-transparent text-white placeholder-white"
             />
           </Form.Item>
+          {preview && (
+            <div className="mt-4">
+              <img
+                src={preview}
+                alt="Preview"
+                className="w-full rounded shadow-lg object-cover"
+              />
+            </div>
+          )}
 
-          <div className="flex justify-end gap-3">
+          <div className="flex justify-end gap-3 mt-3">
             <button
               type="button"
               className="border border-primary text-primary px-5 py-2"

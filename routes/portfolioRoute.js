@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const nodemailer = require("nodemailer"); // ✅ Required for email
 const multer = require("multer");
-const moment = require('moment');
+const moment = require("moment");
 const {
   Intro,
   About,
@@ -329,7 +329,9 @@ router.post("/submit-blog", upload.single("imageBanner"), async (req, res) => {
     }
 
     // Parse datetime string and keep only date part
-    const formattedDate = moment(datetime, "YYYY-MM-DD").startOf('day').toDate();
+    const formattedDate = moment(datetime, "YYYY-MM-DD")
+      .startOf("day")
+      .toDate();
     // Or if not using moment:
     // const formattedDate = new Date(datetime);
     // formattedDate.setHours(0, 0, 0, 0);
@@ -340,7 +342,7 @@ router.post("/submit-blog", upload.single("imageBanner"), async (req, res) => {
     const newBlog = new Blog({
       title,
       description,
-      datetime: formattedDate,  // store as Date object with time set to 00:00:00
+      datetime: formattedDate, // store as Date object with time set to 00:00:00
       link,
       imageUrl: fileUrl,
     });
@@ -378,18 +380,48 @@ router.post("/delete-blog", async (req, res) => {
   }
 });
 // update blog
-router.post("/update-blog", async (req, res) => {
+router.post("/update-blog", upload.single("imageBanner"), async (req, res) => {
   try {
-    const blog = await Blog.findOneAndUpdate({ _id: req.body._id }, req.body, {
+    console.log("Body:", req.body); // debug
+    console.log("File:", req.file); // debug
+
+    const { _id, title, description, datetime, link } = req.body;
+
+    if (!_id) {
+      return res
+        .status(400)
+        .json({ success: false, message: "_id is required" });
+    }
+
+    let updateData = {
+      title,
+      description,
+      datetime,
+      link,
+    };
+
+    if (req.file) {
+      updateData.imageBanner = req.file.filename;
+    }
+
+    const blog = await Blog.findOneAndUpdate({ _id }, updateData, {
       new: true,
     });
-    res.status(200).send({
-      data: blog,
+
+    if (!blog) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
+    }
+
+    res.status(200).json({
       success: true,
-      message: "Blog update successfully",
+      message: "Blog updated successfully",
+      data: blog,
     });
   } catch (error) {
-    res.status(500).send(error);
+    console.error("Error updating blog:", error);
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 
