@@ -267,11 +267,30 @@ const contact = [
   },
 ];
 const uploadImage = {
-    "succes": true,
-    "msg": "File Uploaded Successfully!",
-    "data": {
-        "file_url": "https://res.cloudinary.com/dve98ojdc/image/upload/v1752944210/ez3yxagukql3k9mdno83.png",
-        "_id": "687bce5231536ed07632c444",
-        "__v": 0
-    }
-}
+  succes: true,
+  msg: "File Uploaded Successfully!",
+  data: {
+    file_url:
+      "https://res.cloudinary.com/dve98ojdc/image/upload/v1752944210/ez3yxagukql3k9mdno83.png",
+    _id: "687bce5231536ed07632c444",
+    __v: 0,
+  },
+};
+
+const stackPositions = [
+  {
+    title: "Junior Flutter Developer",
+    description:
+      "Assisted in the development of mobile applications using Flutter.",
+  },
+  {
+    title: "Mid Level Flutter Developer",
+    description:
+      "Contributed to the design and implementation of new features.",
+  },
+  {
+    title: "Senior Flutter Developer",
+    description:
+      "Led the development team and architected the mobile application.",
+  },
+];

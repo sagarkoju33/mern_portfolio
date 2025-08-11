@@ -167,6 +167,17 @@ const contactSchema = new mongoose.Schema({
   },
 });
 
+const stackPositionSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+});
+
 var profilePictureSchema = new mongoose.Schema({
   file_url: {
     type: String,
@@ -182,4 +193,5 @@ module.exports = {
   Education: mongoose.model("educations", educationSchema),
   Contact: mongoose.model("contacts", contactSchema),
   ProfilePicture: mongoose.model("profilepictures", profilePictureSchema),
+  StackPosition: mongoose.model("stackpositions", stackPositionSchema),
 };

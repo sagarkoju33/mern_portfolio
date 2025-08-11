@@ -9,6 +9,7 @@ const {
   Project,
   Education,
   Contact,
+  StackPosition,
   ProfilePicture,
 } = require("../models/portfolioModel");
 
@@ -27,7 +28,8 @@ router.get("/get-portfolio-data", async (req, res) => {
     const projects = await Project.find();
     const educations = await Education.find();
     const contacts = await Contact.find();
-    const blogs = await Blog.find();
+    const stackPositions = await StackPosition.find();
+    const blogs = await Blog.find(); // Sort blogs by datetime in descending orde
     const store = await Store.find().sort({ _id: -1 });
     res.status(200).json({
       intro: intros[0],
@@ -38,6 +40,7 @@ router.get("/get-portfolio-data", async (req, res) => {
       contact: contacts[0],
       profilePicture: store[0],
       blogs: blogs,
+      stackPositions: stackPositions,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -424,5 +427,18 @@ router.post("/update-blog", upload.single("imageBanner"), async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
+// router.post("/add-stackPosition", async (req, res) => {
+//   try {
+//     const education = new Education(req.body);
+//     await education.save();
+//     res.status(200).send({
+//       data: education,
+//       success: true,
+//       message: "Education added successfully",
+//     });
+//   } catch (error) {
+//     res.status(500).send(error);
+//   }
+// });
 
 module.exports = router;
