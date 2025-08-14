@@ -20,6 +20,7 @@ import { useCallback } from "react";
 import AdminEducation from "./education";
 import AdminProjects from "./project";
 import AdminBlogs from "./blog";
+import StackPosition from "./stackPosition";
 import { BASE_URL } from "./env";
 function Dashboard() {
   const dispatch = useDispatch();
@@ -84,6 +85,11 @@ function Dashboard() {
       key: "6",
       label: "Blog",
       children: <AdminBlogs />,
+    },
+    {
+      key: "7",
+      label: "Stack Position",
+      children: <StackPosition />,
     },
   ];
 
