@@ -427,18 +427,48 @@ router.post("/update-blog", upload.single("imageBanner"), async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 });
-// router.post("/add-stackPosition", async (req, res) => {
-//   try {
-//     const education = new Education(req.body);
-//     await education.save();
-//     res.status(200).send({
-//       data: education,
-//       success: true,
-//       message: "Education added successfully",
-//     });
-//   } catch (error) {
-//     res.status(500).send(error);
-//   }
-// });
+router.post("/add-stackPosition", async (req, res) => {
+  try {
+    const stackPosition = new StackPosition(req.body);
+    await stackPosition.save();
+    res.status(200).send({
+      data: stackPosition,
+      success: true,
+      message: "StackPosition added successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 
+router.post("/update-stackPosition", async (req, res) => {
+  try {
+    const stackPosition = await StackPosition.findOneAndUpdate(
+      { _id: req.body._id },
+      req.body,
+      { new: true }
+    );
+    res.status(200).send({
+      data: stackPosition,
+      success: true,
+      message: "Stack Position update successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+router.post("/delete-stackPosition", async (req, res) => {
+  try {
+    const stackPosition = await StackPosition.findOneAndDelete({
+      _id: req.body._id,
+    });
+    res.status(200).send({
+      data: stackPosition,
+      success: true,
+      message: "stack Position deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
 module.exports = router;
