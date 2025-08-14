@@ -118,9 +118,12 @@ function AdminBlogs() {
   const onDelete = async (item) => {
     try {
       dispatch(ShowLoading());
-      const response = await axios.post("/api/portfolio/delete-blog", {
-        _id: item._id,
-      });
+      const response = await axios.post(
+        "${BASE_URL}/api/portfolio/delete-blog",
+        {
+          _id: item._id,
+        }
+      );
       if (response.data.success) {
         toast.success(response.data.message);
         dispatch(HideLoading());

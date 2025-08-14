@@ -63,9 +63,12 @@ function StackPosition() {
   const onDelete = async (item) => {
     try {
       dispatch(ShowLoading());
-      const response = await axios.post("/api/portfolio/delete-stackPosition", {
-        _id: item._id,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/api/portfolio/delete-stackPosition`,
+        {
+          _id: item._id,
+        }
+      );
       if (response.data.success) {
         toast.success(response.data.message);
         dispatch(HideLoading());
@@ -129,7 +132,7 @@ function StackPosition() {
         open={showAddEditModal}
         title={
           <span className="text-white">
-            {selectedItemForEdit ? "Edit Education" : "Add Education"}
+            {selectedItemForEdit ? "Edit StackPosition" : "Add StackPosition"}
           </span>
         }
         footer={null}

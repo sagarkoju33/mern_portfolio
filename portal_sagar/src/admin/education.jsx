@@ -63,9 +63,12 @@ function AdminEducation() {
   const onDelete = async (item) => {
     try {
       dispatch(ShowLoading());
-      const response = await axios.post("/api/portfolio/delete-education", {
-        _id: item._id,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/api/portfolio/delete-education`,
+        {
+          _id: item._id,
+        }
+      );
       if (response.data.success) {
         toast.success(response.data.message);
         dispatch(HideLoading());
@@ -103,8 +106,9 @@ function AdminEducation() {
               <hr />
               <h1 className="text-md mt-3">Degree : {education.degree}</h1>
               <h1 className="text-sm">Institution : {education.institution}</h1>
-              <h1 className="text-sm"
-                style={{ wordBreak: "break-word" }}>Link : {education.link}</h1>
+              <h1 className="text-sm" style={{ wordBreak: "break-word" }}>
+                Link : {education.link}
+              </h1>
               <h1 className="text-sm">{education.description}</h1>
               <div className="flex justify-end gap-5 mt-5">
                 <button
