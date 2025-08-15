@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import Login from "./admin/login";
 import Dashboard from "./admin/dashboard";
-import "react-toastify/dist/ReactToastify.css"
+import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 function App() {
   return (

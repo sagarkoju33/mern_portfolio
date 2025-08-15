@@ -27,7 +27,6 @@ function Dashboard() {
   const { loading, portfolioData, reloadData } = useSelector(
     (state) => state.root
   );
-
   const getPortfolioData = useCallback(async () => {
     dispatch(ShowLoading());
     try {
