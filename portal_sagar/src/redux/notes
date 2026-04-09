@@ -1,0 +1,21 @@
+//--------------Redux is a state management
+//  library commonly used with React
+//  to manage the state of large and complex applications.
+// In React, components typically manage their own state
+//  and communicate through props,
+//  which can lead to "prop drilling" (passing props through many levels) in larger applications.
+//  Redux provides a centralized "store" for the application's global state,
+//  making it accessible to any component without explicit prop passing.
+
+// Key Concepts of Redux in React:
+//Store: The single source of truth for the entire application's state.
+//Actions: Plain JavaScript objects that describe what happened in the application (e.g., user clicked a button, data fetched). They have a type property and can carry a payload.
+//Reducers: Pure functions that take the current state and an action as input, and return a new state based on the action's type. They are the only way to change the state in a Redux application.
+//Dispatch: A function used to send actions to the store, triggering the reducers to update the state.
+//Selectors: Functions used to extract specific pieces of state from the Redux store, preventing components from re-rendering unnecessarily when unrelated parts of the state change.
+
+//How Redux Works with React:
+//react-redux Library: This official library provides bindings to connect React components to the Redux store.
+//Provider: A component from react-redux that wraps your entire React application, making the Redux store available to all descendant components.
+//useSelector Hook: Allows functional components to subscribe to specific parts of the Redux state and re-render when those parts change.
+//useDispatch Hook: Provides access to the dispatch function, allowing functional components to dispatch actions to the store.

@@ -250,7 +250,7 @@ router.post("/admin-login", async (req, res) => {
         },
       });
     } else {
-      res.status(200).send({
+      res.status(500).send({
         success: false,
         message: "Invalid user name and password",
         data: user,

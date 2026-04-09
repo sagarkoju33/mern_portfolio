@@ -6,17 +6,16 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const uploadFile = async(filePath) => {
- try {
-       const result = await cloudinary.uploader.upload(filePath);
-       console.log(result)
-        return result;
-    } catch (error) {
-        console.log(error.message);
-    }
-
-}
+const uploadFile = async (filePath) => {
+  try {
+    const result = await cloudinary.uploader.upload(filePath);
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 module.exports = {
-  uploadFile
+  uploadFile,
 };

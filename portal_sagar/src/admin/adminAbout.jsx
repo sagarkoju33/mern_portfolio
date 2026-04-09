@@ -20,8 +20,7 @@ function AdminAbout() {
     if (portfolioData?.profilePicture?.file_url) {
       setPreviewImage(portfolioData.profilePicture.file_url);
     }
-
-    if (
+ if (
       portfolioData?.about?.skills &&
       Array.isArray(portfolioData.about.skills)
     ) {
